@@ -1,8 +1,10 @@
 [tool.poetry]
 name = "django_template_component"
 version = "0.1.0"
-description = ""
+description = "django_template_component = inclusion tag + blocks"
 authors = ["Neil Lyons <nwjlyons@googlemail.com>"]
+readme = "README.md"
+keywords = ['component', 'block', 'slot', 'template', 'django']
 
 [tool.poetry.dependencies]
 python = "^3.10"
