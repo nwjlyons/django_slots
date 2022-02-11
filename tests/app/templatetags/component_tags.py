@@ -6,14 +6,18 @@ register = Library()
 
 @register.component
 class Hr(Component):
-    def get_context_data(self, filled_slots):
-        return {}
+    pass
 
 
 @register.component
 class Button(Component):
-    def get_context_data(self, filled_slots, value):
-        return {'value': value}
+    pass
+
+
+@register.inline_component
+class Alert(Component):
+    def get_context_data(self, filled_slots, message: str):
+        return {'message': message}
 
 
 @register.component

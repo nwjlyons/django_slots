@@ -107,7 +107,7 @@ class Component:
         return [SlotBlockNode(name=DEFAULT_SLOT_NAME, nodelist=nodelist)]
 
     def get_context_data(self, filled_slots, **kwargs):
-        raise NotImplementedError
+        return kwargs
 
 
 class ComponentNode(Node):

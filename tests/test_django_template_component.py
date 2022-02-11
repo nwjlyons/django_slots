@@ -4,7 +4,7 @@ from django.test import SimpleTestCase
 from django_template_component.components import ComponentValidationError
 
 
-class KeywordArgumentsTestCase(SimpleTestCase):
+class ComponentTestCase(SimpleTestCase):
 
     def test_no_keyword_arguments(self):
         self.assertHTMLEqual(
@@ -32,14 +32,14 @@ class KeywordArgumentsTestCase(SimpleTestCase):
         with self.assertRaises(ComponentValidationError):
             Template("""
             {% load component_tags %}
-            {% button/ %}
+            {% alert/ %}
             """).render(Context())
 
     def test_unexpected_keyword_argument(self):
         with self.assertRaises(ComponentValidationError):
             Template("""
             {% load component_tags %}
-            {% button/ value="Save" style='green' %}
+            {% alert/ message="Alert!" style='green' %}
             """).render(Context())
 
 
