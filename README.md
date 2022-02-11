@@ -2,6 +2,18 @@
 
 django_template_component = inclusion tag + blocks
 
+```shell
+pip install django-template-component
+```
+
+```python
+INSTALLED_APPS = [
+    # ...
+    
+    'django_template_component',
+]
+```
+
 ### Examples
 
 - [Button example](#button-example)
