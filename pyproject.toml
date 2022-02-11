@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "django_template_component"
-version = "0.1.1"
+version = "0.1.2"
 description = "django_template_component = inclusion tag + blocks"
 authors = ["Neil Lyons <nwjlyons@googlemail.com>"]
 readme = "README.md"
-keywords = ['component', 'block', 'slot', 'template', 'django']
+keywords = ["component", "block", "slot", "template", "django"]
+repository = "https://github.com/nwjlyons/django_template_component"
 
 [tool.poetry.dependencies]
 python = "^3.10"
