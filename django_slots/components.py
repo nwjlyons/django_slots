@@ -1,3 +1,4 @@
+from collections import defaultdict
 import os
 from typing import Tuple, Dict, List
 
@@ -118,10 +119,7 @@ class ComponentNode(Node):
         self.slots = slots
 
     def render(self, context):
-        slots = {
-            slot.name: slot.render(context)
-            for slot in self.slots
-        }
+        slots = defaultdict(str, {slot.name: slot.render(context) for slot in self.slots})
         resolved_kwargs = {key: value.resolve(context) for key, value in self.kwargs.items()}
         try:
             context = self.component.get_context_data(list(slots.keys()), **resolved_kwargs)
