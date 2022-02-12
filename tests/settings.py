@@ -2,7 +2,7 @@ SECRET_KEY = 'secret'
 
 INSTALLED_APPS=[
     'tests.app',
-    'django_template_component'
+    'django_slots'
 ]
 
 TEMPLATES = [

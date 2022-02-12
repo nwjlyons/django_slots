@@ -1,16 +1,16 @@
-# django_template_component
+# django_slots
 
-django_template_component = inclusion tag + blocks
+django_slots = inclusion tag + blocks
 
 ```shell
-pip install django-template-component
+pip install django-slots
 ```
 
 ```python
 INSTALLED_APPS = [
     # ...
     
-    'django_template_component',
+    'django_slots',
 ]
 ```
 
@@ -24,7 +24,7 @@ INSTALLED_APPS = [
 
 ```python
 # app/templatetags/component_tags.py
-from django_template_component import Library, Component
+from django_slots import Library, Component
 
 register = Library()
 
@@ -53,7 +53,7 @@ class Button(Component):
 
 ```python
 # app/templatetags/component_tags.py
-from django_template_component import Library, Component
+from django_slots import Library, Component
 
 register = Library()
 
@@ -93,7 +93,7 @@ class Details(Component):
 from django.forms.utils import ErrorList
 from django.forms import Form
 
-from django_template_component.components import Library, Component, DEFAULT_SLOT_NAME
+from django_slots.components import Library, Component, DEFAULT_SLOT_NAME
 
 
 register = Library()

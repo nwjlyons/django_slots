@@ -1,4 +1,4 @@
-from django_template_component import Component, Library
+from django_slots import Component, Library
 
 
 register = Library()

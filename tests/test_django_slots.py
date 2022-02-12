@@ -1,7 +1,7 @@
 from django.template import Template, Context
 from django.test import SimpleTestCase
 
-from django_template_component.components import ComponentValidationError
+from django_slots.components import ComponentValidationError
 
 
 class ComponentTestCase(SimpleTestCase):

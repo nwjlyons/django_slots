@@ -6,8 +6,8 @@ from django.template.base import Parser, Node, NodeList, Token
 from django.template.library import parse_bits
 from django.template.loader import get_template
 
-from django_template_component.templatetags.slot_tags import SlotNode
-from django_template_component.utils import camelcase_to_underscore
+from django_slots.templatetags.slot_tags import SlotNode
+from django_slots.utils import camelcase_to_underscore
 
 DEFAULT_SLOT_NAME = 'slot'
 
