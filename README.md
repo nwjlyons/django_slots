@@ -22,11 +22,9 @@ INSTALLED_APPS = [
 
 ## Button example
 
-`app/templatetags/component_tags.py`
-
 ```python
+# app/templatetags/component_tags.py
 from django_template_component import Library, Component
-
 
 register = Library()
 
@@ -36,9 +34,8 @@ class Button(Component):
     pass
 ```
 
-`app/templates/components/button.html`
-
 ```html+django
+{# app/templates/components/button.html #}
 <button>{{ slot }}</button>
 ```
 
@@ -54,11 +51,9 @@ class Button(Component):
 
 ## Details example
 
-`app/templatetags/component_tags.py`
-
 ```python
+# app/templatetags/component_tags.py
 from django_template_component import Library, Component
-
 
 register = Library()
 
@@ -68,10 +63,8 @@ class Details(Component):
     pass
 ```
 
-
-`app/templates/components/details.html`
-
 ```html+django
+{# app/templates/components/details.html #}
 <details>
   <summary>{{ slots.summary }}</summary>
   {{ slot }}
@@ -95,9 +88,8 @@ class Details(Component):
 
 ### Python
 
-`app/templatetags/component_tags.py`
-
 ```python
+# app/templatetags/component_tags.py
 from django.forms.utils import ErrorList
 from django.forms import Form
 
@@ -115,6 +107,7 @@ class Button(Component):
     def get_context_data(
         self, 
         filled_slots: list[str], 
+        *,
         type: str = 'submit', 
         name: str ='', 
         value: str = 'Submit', 
@@ -139,7 +132,7 @@ class Button(Component):
 
 @register.inline_component
 class FormErrors(Component):
-    def get_context_data(self, filled_slots: list[str], errors: ErrorList):
+    def get_context_data(self, filled_slots: list[str], *, errors: ErrorList):
         return {
             'errors': errors,
         }
@@ -147,7 +140,7 @@ class FormErrors(Component):
 
 @register.inline_component
 class FormField(Component):
-    def get_context_data(self, filled_slots: list[str], field):
+    def get_context_data(self, filled_slots: list[str], *, field):
         return {
             'field': field,
         }
@@ -157,7 +150,8 @@ class FormField(Component):
 class Form(Component):
     def get_context_data(
         self, 
-        filled_slots: list[str], 
+        filled_slots: list[str],
+        *,
         form: Form, 
         action: str = '', 
         method: str = 'post', 
@@ -179,9 +173,8 @@ class Form(Component):
 
 ### HTML
 
-`app/templates/components/button.html`
-
 ```html+django
+{# app/templates/components/button.html #}
 {% load slot_tags %}
 <button {% if type %} type="{{ type }}"{% endif %}{% if name %} name="{{ name }}"{% endif %}
     class="btn{% if style == "green" %} btn--green{% elif style == "red" %}btn--red{% endif %}">
@@ -189,9 +182,8 @@ class Form(Component):
 </button>
 ```
 
-`app/templates/components/form_errors.html`
-
 ```html+django
+{# app/templates/components/form_errors.html #}
 {% if errors %}
 <div>
     {% for error in errors %}
@@ -201,9 +193,8 @@ class Form(Component):
 {% endif %}
 ```
 
-`app/templates/components/form_field.html`
-
 ```html+django
+{# app/templates/components/form_field.html #}
 {% load component_tags %}
 <div class="field">
     {% if field.label %}
@@ -220,9 +211,8 @@ class Form(Component):
 
 ```
 
-`app/templates/components/form.html`
-
 ```html+django
+{# app/templates/components/form.html #}
 {% load component_tags %}
 <form action="{{ action }}" method="{{ method }}"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
     {% if csrf_token %}<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">{% endif %}
