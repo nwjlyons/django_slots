@@ -274,7 +274,7 @@ class Form(Component):
 ## Namespace
 
 ```python
-# app/templatetags/nhsuk_component_tags.py
+# nhsuk_components/templatetags/nhsuk_components.py
 from django_slots.components import Library, Component
 
 register = Library()
@@ -290,14 +290,14 @@ class Button(NHSUKComponent):
 ```
 
 ```html+django
-{# app/templates/components/nhsuk/button.html #}
+{# nhsuk_components/templates/components/nhsuk/button.html #}
 <button>{{ value|default:slot }}</button>
 ```
 
 ### Usage
 
 ```django+html
-{% load nhsuk_component_tags %}
+{% load nhsuk_components %}
 
 {% nhsuk:button/ value="Save" %}
 
