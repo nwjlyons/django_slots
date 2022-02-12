@@ -275,10 +275,10 @@ class Form(Component):
 
 ```python
 # app/templatetags/nhsuk_component_tags.py
-from django_slots.components import Library, Component, DEFAULT_SLOT_NAME
-
+from django_slots.components import Library, Component
 
 register = Library()
+
 
 class NHSUKComponent(Component):
     namespace = 'nhsuk'
