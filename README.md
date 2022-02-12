@@ -16,9 +16,11 @@ INSTALLED_APPS = [
 
 ### Examples
 
-- [Button example](#button-example)
-- [Details example](#details-example)
-- [Form example](#form-example)
+- Examples
+  - [Button example](#button-example)
+  - [Details example](#details-example)
+  - [Form example](#form-example)
+- [Namespace](#namespace)
 
 ## Button example
 
@@ -267,4 +269,40 @@ class Form(Component):
         {% button %}Delete{% /button %}
     {% /slot %}
 {% /form %}
+```
+
+## Namespace
+
+```python
+# app/templatetags/nhsuk_component_tags.py
+from django_slots.components import Library, Component, DEFAULT_SLOT_NAME
+
+
+register = Library()
+
+class NHSUKComponent(Component):
+    namespace = 'nhsuk'
+
+
+@register.component
+class Button(NHSUKComponent):
+    pass
+```
+
+```html+django
+{# app/templates/components/nhsuk/button.html #}
+<button>{{ value|default:slot }}</button>
+```
+
+### Usage
+
+```django+html
+{% load nhsuk_component_tags %}
+
+{% nhsuk:button/ value="Save" %}
+
+{% nhsuk:button %}
+    <div>Save</div>
+    <small>and add another</small>
+{% /nhsuk:button %}
 ```

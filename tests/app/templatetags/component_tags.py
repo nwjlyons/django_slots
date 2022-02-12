@@ -10,6 +10,11 @@ class Hr(Component):
 
 
 @register.component
+class Hr(Component):
+    namespace = 'foo'
+
+
+@register.component
 class Button(Component):
     pass
 

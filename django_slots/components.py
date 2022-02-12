@@ -43,7 +43,7 @@ class Component:
     def get_template_name(self) -> str:
         if self.template_name:
             return self.template_name
-        return os.path.join("components", f"{self.get_name()}.html")
+        return os.path.join("components", self.namespace, f"{self.get_name()}.html")
 
     @classmethod
     def get_inline_tag_name(cls) -> str:

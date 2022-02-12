@@ -24,6 +24,18 @@ class ComponentTestCase(SimpleTestCase):
             """,
         )
 
+    def test_namespace(self):
+        self.assertHTMLEqual(
+            Template("""
+            {% load slot_tags %}
+            {% load component_tags %}
+            {% foo:hr/ %}
+            """).render(Context()),
+            """
+            <hr class="from-foo-namespace">
+            """,
+        )
+
     def test_no_keyword_arguments(self):
         self.assertHTMLEqual(
             Template("""
