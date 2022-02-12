@@ -17,6 +17,7 @@ INSTALLED_APPS = [
 ### Examples
 
 - [Button example](#button-example)
+- [Details example](#details-example)
 - [Form example](#form-example)
 
 ## Button example
@@ -32,17 +33,13 @@ register = Library()
 
 @register.component
 class Button(Component):
-    def get_context_data(self, filled_slots):
-        return {}
+    pass
 ```
 
 `app/templates/components/button.html`
 
 ```html+django
-{% load slot_tags %}
-<button>
-    {% slot/ %}
-</button>
+<button>{{ slot }}</button>
 ```
 
 ### Usage
@@ -54,6 +51,45 @@ class Button(Component):
     <small>and add another</small>
 {% /button %}
 ```
+
+## Details example
+
+`app/templatetags/component_tags.py`
+
+```python
+from django_template_component import Library, Component
+
+
+register = Library()
+
+
+@register.block_component
+class Details(Component):
+    pass
+```
+
+
+`app/templates/components/details.html`
+
+```html+django
+<details>
+  <summary>{{ slots.summary }}</summary>
+  {{ slot }}
+</details>
+```
+
+### Usage
+
+```html+django
+{% load component_tags %}
+{% load slot_tags %}
+
+{% details %}
+    {% slot summary %}the summary{% /slot %}
+    the default slot
+{% /details %}
+```
+
 
 ## Form example
 

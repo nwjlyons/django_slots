@@ -14,6 +14,11 @@ class Button(Component):
     pass
 
 
+@register.block_component
+class Details(Component):
+    pass
+
+
 @register.inline_component
 class Alert(Component):
     def get_context_data(self, filled_slots, message: str):

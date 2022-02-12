@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django_template_component"
-version = "0.1.4"
+version = "0.1.5"
 description = "django_template_component = inclusion tag + blocks"
 authors = ["Neil Lyons <nwjlyons@googlemail.com>"]
 readme = "README.md"

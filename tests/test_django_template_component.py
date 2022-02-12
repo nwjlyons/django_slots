@@ -6,6 +6,24 @@ from django_template_component.components import ComponentValidationError
 
 class ComponentTestCase(SimpleTestCase):
 
+    def test_details_component(self):
+        self.assertHTMLEqual(
+            Template("""
+            {% load slot_tags %}
+            {% load component_tags %}
+            {% details %}
+                {% slot summary %}the summary{% /slot %}
+                the default slot
+            {% /details %}
+            """).render(Context()),
+            """
+            <details>
+              <summary>the summary</summary>
+              the default slot
+            </details>
+            """,
+        )
+
     def test_no_keyword_arguments(self):
         self.assertHTMLEqual(
             Template("""

@@ -6,7 +6,7 @@ from django.template.base import Parser, Node, NodeList, Token
 from django.template.library import parse_bits
 from django.template.loader import get_template
 
-from django_template_component.templatetags.slot_tags import SlotBlockNode
+from django_template_component.templatetags.slot_tags import SlotNode
 from django_template_component.utils import camelcase_to_underscore
 
 DEFAULT_SLOT_NAME = 'slot'
@@ -101,10 +101,10 @@ class Component:
         return compile_func
 
     @staticmethod
-    def find_slot_nodes(*, nodelist: NodeList):
-        if slots := nodelist.get_nodes_by_type(SlotBlockNode):
-            return slots
-        return [SlotBlockNode(name=DEFAULT_SLOT_NAME, nodelist=nodelist)]
+    def find_slot_nodes(*, nodelist: NodeList) -> list[SlotNode]:
+        slots = nodelist.get_nodes_by_type(SlotNode)
+        remaining = NodeList(node for node in nodelist if node not in slots)
+        return [SlotNode(name=DEFAULT_SLOT_NAME, nodelist=remaining), *slots]
 
     def get_context_data(self, filled_slots, **kwargs):
         return kwargs
@@ -127,10 +127,8 @@ class ComponentNode(Node):
             context = self.component.get_context_data(list(slots.keys()), **resolved_kwargs)
         except TypeError as error:
             raise self.component.validation_error(error) from error
-        context['component'] = {}
-        context['component']['slot'] = DEFAULT_SLOT_NAME in slots.keys()
-        context['component']['slots'] = {slot_name: True for slot_name in slots.keys()}
-        context['component']['_slots'] = slots
+        context['slot'] = slots.get(DEFAULT_SLOT_NAME, '')
+        context['slots'] = slots
         return get_template(self.component.get_template_name()).render(context)
 
 
