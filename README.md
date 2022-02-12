@@ -257,7 +257,7 @@ class Form(Component):
 {% form/ form=form csrf_token=csrf_token %}
 
 <!-- block use -->
-{% form/ form=form csrf_token=csrf_token %}
+{% form form=form csrf_token=csrf_token %}
 
     <!-- override visible_fields slot in base template -->
     {% slot visible_fields %}
