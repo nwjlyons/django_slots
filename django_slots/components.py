@@ -98,12 +98,12 @@ class Component:
                 kwonly_defaults=None,
             )
             component = cls()
-            slots = component.find_slot_nodes(nodelist=nodelist)
+            slots = component._find_slot_nodes(nodelist=nodelist)
             return ComponentNode(component=component, kwargs=component_kwargs, slots=slots)
         return compile_func
 
     @staticmethod
-    def find_slot_nodes(*, nodelist: NodeList) -> list[SlotNode]:
+    def _find_slot_nodes(*, nodelist: NodeList) -> list[SlotNode]:
         slot_nodes = nodelist.get_nodes_by_type(SlotNode)
         remaining_nodes = NodeList(node for node in nodelist if node not in slot_nodes)
         return [SlotNode(name=DEFAULT_SLOT_NAME, nodelist=remaining_nodes), *slot_nodes]
