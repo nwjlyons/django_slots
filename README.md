@@ -36,13 +36,16 @@ class Button(Component):
 
 ```html+django
 {# app/templates/components/button.html #}
-<button>{{ slot }}</button>
+<button>{{ value|default:slot }}</button>
 ```
 
 ### Usage
 
 ```html+django
 {% load component_tags %}
+
+{% button/ value="Save" %}
+
 {% button %}
     <div>Save</div>
     <small>and add another</small>
