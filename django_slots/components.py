@@ -134,14 +134,23 @@ class ComponentNode(Node):
 class Library(template.Library):
 
     def component(self, component_class: Component) -> Component:
+        """
+        Register inline and block component
+        """
         self.inline_component(component_class)
         self.block_component(component_class)
         return component_class
 
     def inline_component(self, component_class: Component) -> Component:
+        """
+        Register an inline component
+        """
         self.tag(component_class.get_inline_tag_name(), component_class.inline_compile_function())
         return component_class
 
     def block_component(self, component_class: Component) -> Component:
+        """
+        Register a block component
+        """
         self.tag(component_class.get_block_tag_names()[0], component_class.block_compile_function())
         return component_class
