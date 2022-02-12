@@ -66,7 +66,7 @@ class Details(Component):
 ```html+django
 {# app/templates/components/details.html #}
 <details>
-  <summary>{{ slots.summary }}</summary>
+  <summary>{{ summary|default:slots.summary }}</summary>
   {{ slot }}
 </details>
 ```
@@ -77,8 +77,12 @@ class Details(Component):
 {% load component_tags %}
 {% load slot_tags %}
 
+{% details summary="the summary" %}
+    the default slot
+{% /details %}
+
 {% details %}
-    {% slot summary %}the summary{% /slot %}
+    {% slot summary %}the <b>summary</b>{% /slot %}
     the default slot
 {% /details %}
 ```
@@ -175,10 +179,9 @@ class Form(Component):
 
 ```html+django
 {# app/templates/components/button.html #}
-{% load slot_tags %}
 <button {% if type %} type="{{ type }}"{% endif %}{% if name %} name="{{ name }}"{% endif %}
     class="btn{% if style == "green" %} btn--green{% elif style == "red" %}btn--red{% endif %}">
-    {% if value %}{{ value }}{% else %}{{ slot }}{% endif %}
+    {{ value|default:slot }}
 </button>
 ```
 
