@@ -98,7 +98,10 @@ class Details(Component):
 `app/templatetags/component_tags.py`
 
 ```python
-from django_template_component.components import Library, Component
+from django.forms.utils import ErrorList
+from django.forms import Form
+
+from django_template_component.components import Library, Component, DEFAULT_SLOT_NAME
 
 
 register = Library()
@@ -107,11 +110,22 @@ register = Library()
 @register.component
 class Button(Component):
     STYLE_CHOICES = ['green', 'red']
+    TYPE_CHOICES = ['submit', 'reset', '']
 
-    def get_context_data(self, filled_slots, type='submit', name='', value='Submit', style='green'):
-        if value and 'slot' in filled_slots:
-            raise self.validation_error("use value keyword argument or slot tag. Not both.")
+    def get_context_data(
+        self, 
+        filled_slots: list[str], 
+        type: str = 'submit', 
+        name: str ='', 
+        value: str = 'Submit', 
+        style: str = 'green'
+    ):
+        if value and DEFAULT_SLOT_NAME in filled_slots:
+            raise self.validation_error("use value keyword argument or slot tag.")
 
+        if type not in self.TYPE_CHOICES:
+            raise self.validation_error(f"type='{type}' must be one of {self.TYPE_CHOICES!r}")
+        
         if style not in self.STYLE_CHOICES:
             raise self.validation_error(f"style='{style}' must be one of {self.STYLE_CHOICES!r}")
 
@@ -125,7 +139,7 @@ class Button(Component):
 
 @register.inline_component
 class FormErrors(Component):
-    def get_context_data(self, filled_slots, errors):
+    def get_context_data(self, filled_slots: list[str], errors: ErrorList):
         return {
             'errors': errors,
         }
@@ -133,7 +147,7 @@ class FormErrors(Component):
 
 @register.inline_component
 class FormField(Component):
-    def get_context_data(self, filled_slots, field):
+    def get_context_data(self, filled_slots: list[str], field):
         return {
             'field': field,
         }
@@ -141,8 +155,15 @@ class FormField(Component):
 
 @register.component
 class Form(Component):
-    def get_context_data(self, filled_slots, form, action='', method='post', csrf_token='', csrf_exempt=False):
-
+    def get_context_data(
+        self, 
+        filled_slots: list[str], 
+        form: Form, 
+        action: str = '', 
+        method: str = 'post', 
+        csrf_token: str = '', 
+        csrf_exempt: bool = False
+    ):
         if csrf_exempt is False and method == 'post' and csrf_token == '':
             raise self.validation_error(
                 "csrf_token keyword argument is required when method is post and csrf_exempt is false"
@@ -164,7 +185,7 @@ class Form(Component):
 {% load slot_tags %}
 <button {% if type %} type="{{ type }}"{% endif %}{% if name %} name="{{ name }}"{% endif %}
     class="btn{% if style == "green" %} btn--green{% elif style == "red" %}btn--red{% endif %}">
-    {% slot %}{{ value }}{% /slot %}
+    {% if value %}{{ value }}{% else %}{{ slot }}{% endif %}
 </button>
 ```
 
@@ -202,26 +223,28 @@ class Form(Component):
 `app/templates/components/form.html`
 
 ```html+django
-{% load slot_tags %}
 {% load component_tags %}
 <form action="{{ action }}" method="{{ method }}"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
-
-{% if csrf_token %}<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">{% endif %}
-{% for field in form.hidden_fields %}{{ field }}{% endfor %}
-
-{% slot/ hidden_fields %}
+    {% if csrf_token %}<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">{% endif %}
+    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     
-{% form_errors/ errors=form.non_field_errors %}
-
-{% slot visible_fields %}
-    {% for field in form.visible_fields %}
-        {% form_field/ field=field %}
-    {% endfor %}
-{% /slot %}
-
-{% slot buttons %}
-    {% button/ text=_("Submit") %}
-{% /slot %}
+    {{ slots.hidden_fields }}
+        
+    {% form_errors/ errors=form.non_field_errors %}
+    
+    {% if slots.visible_fields %}
+        {{ slots.visible_fields }}
+    {% else %}
+        {% for field in form.visible_fields %}
+            {% form_field/ field=field %}
+        {% endfor %}
+    {% endif %}
+    
+    {% if slots.buttons %}
+        {{ slots.buttons }}
+    {% else %}
+        {% button/ value=_("Submit") %}
+    {% endif %}
 </form>
 ```
 
