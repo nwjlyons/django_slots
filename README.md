@@ -115,14 +115,14 @@ class Button(Component):
 
     def get_context_data(
         self, 
-        filled_slots: list[str], 
+        slots: dict[str, str], 
         *,
         type: str = 'submit', 
         name: str ='', 
         value: str = 'Submit', 
         style: str = 'green'
     ):
-        if value and DEFAULT_SLOT_NAME in filled_slots:
+        if value and DEFAULT_SLOT_NAME in slots:
             raise self.validation_error("use value keyword argument or slot tag.")
 
         if type not in self.TYPE_CHOICES:
@@ -131,35 +131,35 @@ class Button(Component):
         if style not in self.STYLE_CHOICES:
             raise self.validation_error(f"style='{style}' must be one of {self.STYLE_CHOICES!r}")
 
-        return {
+        return super().get_context_data(slots, **{
             'type': type,
             'name': name,
             'value': value,
             'style': style,
-        }
+        })
         
 
 @register.inline_component
 class FormErrors(Component):
-    def get_context_data(self, filled_slots: list[str], *, errors: ErrorList):
-        return {
+    def get_context_data(self, slots: dict[str, str], errors: ErrorList):
+        return super().get_context_data(slots, **{
             'errors': errors,
-        }
+        })
 
 
 @register.inline_component
 class FormField(Component):
-    def get_context_data(self, filled_slots: list[str], *, field):
-        return {
+    def get_context_data(self, slots: dict[str, str], field):
+        return super().get_context_data(slots, **{
             'field': field,
-        }
+        })
 
 
 @register.component
 class Form(Component):
     def get_context_data(
         self, 
-        filled_slots: list[str],
+        slots: dict[str, str],
         *,
         form: Form, 
         action: str = '', 
@@ -172,12 +172,12 @@ class Form(Component):
                 "csrf_token keyword argument is required when method is post and csrf_exempt is false"
             )
         
-        return {
+        return super().get_context_data(slots, **{
             'form': form,
             'action': action,
             'method': method,
             'csrf_token': csrf_token,
-        }
+        })
 ```
 
 ### HTML

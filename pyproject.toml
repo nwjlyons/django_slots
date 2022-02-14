@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django_slots"
-version = "0.1.5"
+version = "0.2.5"
 description = "django_slots = inclusion tag + blocks"
 authors = ["Neil Lyons <nwjlyons@googlemail.com>"]
 readme = "README.md"

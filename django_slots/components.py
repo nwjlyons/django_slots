@@ -108,8 +108,10 @@ class Component:
         remaining_nodes = NodeList(node for node in nodelist if node not in slot_nodes)
         return [SlotNode(name=DEFAULT_SLOT_NAME, nodelist=remaining_nodes), *slot_nodes]
 
-    def get_context_data(self, filled_slots: list[str], **kwargs) -> dict[str, typing.Any]:
-        return kwargs
+    def get_context_data(self, slots: dict[str, str], **kwargs) -> dict[str, typing.Any]:
+        # Convert to defaultdict to prevent KeyError with use of |default template filter
+        slots = defaultdict(str, slots)
+        return {'slot': slots[DEFAULT_SLOT_NAME], 'slots': slots, **kwargs}
 
 
 class ComponentNode(Node):
@@ -120,14 +122,12 @@ class ComponentNode(Node):
         self.slots = slots
 
     def render(self, context: RequestContext) -> str:
-        slots = defaultdict(str, {slot.name: slot.render(context) for slot in self.slots})
+        slots = {slot.name: slot.render(context) for slot in self.slots}
         resolved_kwargs = {key: value.resolve(context) for key, value in self.kwargs.items()}
         try:
-            context = self.component.get_context_data(list(slots.keys()), **resolved_kwargs)
+            context = self.component.get_context_data(slots, **resolved_kwargs)
         except TypeError as error:
             raise self.component.validation_error(error) from error
-        context['slot'] = slots[DEFAULT_SLOT_NAME]
-        context['slots'] = slots
         return get_template(self.component.get_template_name()).render(context)
 
 

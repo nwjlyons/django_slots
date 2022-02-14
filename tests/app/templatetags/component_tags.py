@@ -26,11 +26,10 @@ class Details(Component):
 
 @register.inline_component
 class Alert(Component):
-    def get_context_data(self, filled_slots, message: str):
-        return {'message': message}
+    def get_context_data(self, slots, message: str):
+        pass
 
 
 @register.component
 class Section(Component):
-    def get_context_data(self, filled_slots):
-        return {}
+    pass
