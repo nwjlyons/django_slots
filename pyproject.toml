@@ -1,18 +1,20 @@
 [tool.poetry]
 name = "django_slots"
-version = "0.2.5"
+version = "0.2.7"
 description = "django_slots = inclusion tag + blocks"
 authors = ["Neil Lyons <nwjlyons@googlemail.com>"]
+license = 'BSD-3-Clause'
 readme = "README.md"
 keywords = ["slot", "component", "block", "template", "django"]
 repository = "https://github.com/nwjlyons/django_slots"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+Django = "^4.0.2"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
-Django = "^4.0.2"
+pytest = "^7.0.1"
+pre-commit = "^2.17.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

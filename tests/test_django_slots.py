@@ -1,89 +1,61 @@
-from django.template import Template, Context
-from django.test import SimpleTestCase
-
-from django_slots.components import ComponentValidationError
+from django.template import Context, Template, TemplateSyntaxError
+from django.test import TestCase
 
 
-class ComponentTestCase(SimpleTestCase):
+def render(template: str, data: dict[str, object] = None) -> str:
+    """Convenience function for rendering templates"""
+    data = data or {}
+    return Template("{% load components slot_tags %} " + template).render(
+        Context(data or {})
+    )
 
-    def test_details_component(self):
+
+class ComponentsTestCase(TestCase):
+    def test_inline_and_block_component(self):
+        assert render("{% button/ %}")
+        assert render("{% button %}{% /button %}")
+
+    def test_inline_only_component(self):
+        with self.assertRaisesMessage(
+            TemplateSyntaxError, "Invalid block tag on line 1: 'hr'."
+        ):
+            assert render("{% hr %}{% /hr %}")
+
+        assert render("{% hr/ %}")
+
+    def test_block_only_component(self):
+        with self.assertRaisesMessage(
+            TemplateSyntaxError, "Invalid block tag on line 1: 'details/'."
+        ):
+            assert render("{% details/ %}")
+        assert render("{% details %}{% /details %}")
+
+    def test_default_slot(self):
         self.assertHTMLEqual(
-            Template("""
-            {% load slot_tags %}
-            {% load component_tags %}
-            {% details %}
-                {% slot summary %}the summary{% /slot %}
-                the default slot
-            {% /details %}
-            """).render(Context()),
+            render("{% button %}the default <b>slot</b>{% /button %}"),
+            "<button>the default <b>slot</b></button>",
+        )
+
+    def test_named_slot(self):
+        self.assertHTMLEqual(
+            render(
+                """
+                {% details %}
+                    {% slot summary %}the <b>summary</b>{% /slot %}
+                    the default <b>slot</b>
+                {% /details %}
+                """
+            ),
             """
             <details>
-              <summary>the summary</summary>
-              the default slot
+                <summary>the <b>summary</b></summary>
+                the default <b>slot</b>
             </details>
             """,
         )
 
-    def test_namespace(self):
+    def test_keyword_args(self):
         self.assertHTMLEqual(
-            Template("""
-            {% load slot_tags %}
-            {% load component_tags %}
-            {% foo:hr/ %}
-            """).render(Context()),
-            """
-            <hr class="from-foo-namespace">
-            """,
-        )
-
-    def test_no_keyword_arguments(self):
-        self.assertHTMLEqual(
-            Template("""
-            {% load component_tags %}
-            {% hr/ %}
-            """).render(Context()),
-            """
-            <hr>
-            """,
-        )
-
-    def test_keyword_argument(self):
-        self.assertHTMLEqual(
-            Template("""
-            {% load component_tags %}
-            {% button/ value="Save" %}
-            """).render(Context()),
-            """
-            <button>Save</button>
-            """,
-        )
-
-    def test_required_keyword_argument(self):
-        with self.assertRaises(ComponentValidationError):
-            Template("""
-            {% load component_tags %}
-            {% alert/ %}
-            """).render(Context())
-
-    def test_unexpected_keyword_argument(self):
-        with self.assertRaises(ComponentValidationError):
-            Template("""
-            {% load component_tags %}
-            {% alert/ message="Alert!" style='green' %}
-            """).render(Context())
-
-
-class SlotsTestCase(SimpleTestCase):
-
-    def test_slot(self):
-        self.assertHTMLEqual(
-            Template("""
-            {% load component_tags %}
-            {% section %}default slot content{% /section %}
-            """).render(Context()),
-            """
-            <section>
-                default slot content
-            </section>
-            """,
+            render("{% button/ value='Save' %}"),
+            "<button>Save</button>",
         )

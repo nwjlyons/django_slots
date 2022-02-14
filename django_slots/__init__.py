@@ -1,1 +1,1 @@
-from .components import Library, Component
+from .components import Component, Library  # noqa

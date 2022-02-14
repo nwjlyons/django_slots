@@ -1,6 +1,12 @@
 import re
 
 
-def camelcase_to_underscore(str):
-    # https://djangosnippets.org/snippets/585/
-    return re.sub('(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))', '_\\1', str).lower().strip('_')
+def pascalcase_to_snakecase(string: str) -> str:
+    """
+    Convert string from PascalCase to snake_case
+    """
+    return (
+        re.sub("(((?<=[a-z])[A-Z])|([A-Z](?![A-Z]|$)))", "_\\1", string)
+        .lower()
+        .strip("_")
+    )
