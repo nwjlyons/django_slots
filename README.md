@@ -15,7 +15,7 @@ register = Library()
 
 @register.block_component
 class Details(Component):
-  pass
+    pass
 ```
 
 2. Create a template
@@ -23,8 +23,8 @@ class Details(Component):
 ```html+django
 {# app/templates/components/details.html #}
 <details>
-<summary>{{ summary|default:slots.summary }}</summary>
-{{ slot }}
+    <summary>{{ summary|default:slots.summary }}</summary>
+    {{ slot }}
 </details>
 ```
 
@@ -35,12 +35,12 @@ Usage:
 {% load slot_tags %}
 
 {% details summary="the summary" %}
-  the default slot
+      the default slot
 {% /details %}
 
 {% details %}
-  {% slot summary %}the <b>summary</b>{% /slot %}
-  the default slot
+    {% slot summary %}the <b>summary</b>{% /slot %}
+    the default slot
 {% /details %}
 ```
 
